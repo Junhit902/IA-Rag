@@ -33,8 +33,8 @@ mlflow.set_experiment("youtube_trending_classification")
 # Conexão com o MinIO
 client = Minio(
     "localhost:9000",
-    access_key="minio",
-    secret_key="minio123",
+    access_key=os.getenv("MINIO_ACCESS_KEY"),
+    secret_key=os.getenv("MINIO_SECRET_KEY"),
     secure=False
 )
 
