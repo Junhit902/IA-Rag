@@ -1,3 +1,4 @@
+
 import os
 import tempfile
 import warnings
@@ -25,7 +26,6 @@ warnings.filterwarnings("ignore")
 # Configuração do MLflow
 # Se estiver rodando o MLflow localmente, a URI será essa:
 # http://localhost:3000
-# Caso o seu grupo tenha configurado outra porta, altere aqui.
 mlflow.set_tracking_uri("http://localhost:3000")
 
 mlflow.set_experiment("youtube_trending_classification")
@@ -44,9 +44,6 @@ def load_gold_data():
     """
     Baixa o arquivo da camada Gold do MinIO, lê com pandas
     e retorna um DataFrame.
-
-    Retorno:
-        df (pd.DataFrame): dados carregados da Gold
     """
 
     print("Baixando dados da camada Gold...")
@@ -68,22 +65,7 @@ def load_gold_data():
 # Função para preparar os dados para classificação (PRÉ-PROCESSAMENTO)
 def prepare_data(df):
     """
-    Preparando os dados para classificação.
-
-    O problema escolhido: prever se um vídeo é viral ou não.
-
-    Critério usado:
-    viral = 1 se views > 1.000.000
-    viral = 0 caso contrário
-
-    Também cria algumas features novas.
-
-    Parâmetros:
-        df (pd.DataFrame): DataFrame original
-
-    Retorno:
-        X (pd.DataFrame): features
-        y (pd.Series): target
+    Realiza o pré-processamento dos dados para o modelo de classificação.
     """
 
     print("Iniciando pré-processamento...")
@@ -117,7 +99,6 @@ def prepare_data(df):
     df["comments_ratio"] = df["comments"] / safe_views
 
     # Features finais para o modelo
-    # Aqui estamos escolhendo colunas numéricas e derivadas para usar no modelo
     features = [
     "likes",
     "dislikes",
@@ -158,7 +139,7 @@ def train_and_evaluate_model(model_name, model, X_train, X_test, y_train, y_test
 
     print(f"\nTreinando modelo: {model_name}")
 
-    # Inicia uma execução (run) no MLflow
+    # Inicia uma execução no MLflow
     with mlflow.start_run(run_name=model_name):
 
         model.fit(X_train, y_train)
